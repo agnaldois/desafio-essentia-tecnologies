@@ -36,4 +36,22 @@ body {
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+/* Toast / Snackbar overrides — Angular Material MDC */
+.toast-error .mdc-snackbar__surface {
+  background-color: #d32f2f !important;
+  color: #ffffff !important;
+}
+
+.toast-success .mdc-snackbar__surface {
+  background-color: #388e3c !important;
+  color: #ffffff !important;
+}
+
+/* Fallback for alternative MDC class name if above does not apply */
+.toast-error .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #d32f2f;
+}
+
+.toast-success .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #388e3c;
+}
