@@ -11,8 +11,11 @@ export function errorMiddleware(
   // Server-side log only — never sent to the client (D-06)
   console.error(err.stack);
 
+  // Only echo err.message for intentional 4xx client errors (CR-04).
+  // 5xx responses must never expose internal details (DB hosts, stack hints).
+  const isClientError = statusCode >= 400 && statusCode < 500;
   res.status(statusCode).json({
-    error: err.message || 'Internal server error',
+    error: isClientError ? err.message : 'Internal server error',
     statusCode,
   });
 }
