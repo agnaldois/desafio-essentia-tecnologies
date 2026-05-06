@@ -1,6 +1,7 @@
 import {
   IsString,
   IsOptional,
+  IsNotEmpty,
   IsEnum,
   IsBoolean,
   IsDateString,
@@ -11,6 +12,7 @@ import { TaskPriority } from '../entities/Task.entity';
 export class UpdateTaskDto {
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   @MaxLength(255)
   title?: string;
 
