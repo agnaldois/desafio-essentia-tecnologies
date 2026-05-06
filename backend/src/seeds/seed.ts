@@ -118,6 +118,10 @@ export const SEED_TASKS: Partial<Task>[] = [
 ];
 
 async function runSeed(): Promise<void> {
+  // WR-03: refuse to run in production — repo.clear() truncates all tasks
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('Seed must not be run in production. Aborting.');
+  }
   await AppDataSource.initialize();
   try {
     const repo = AppDataSource.getRepository(Task);
