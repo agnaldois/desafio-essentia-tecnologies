@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function errorMiddleware(
-  err: Error & { status?: number; statusCode?: number },
+  err: Error & { status?: number; statusCode?: number; details?: string[][] },
   _req: Request,
   res: Response,
   _next: NextFunction,
@@ -14,8 +14,16 @@ export function errorMiddleware(
   // Only echo err.message for intentional 4xx client errors (CR-04).
   // 5xx responses must never expose internal details (DB hosts, stack hints).
   const isClientError = statusCode >= 400 && statusCode < 500;
-  res.status(statusCode).json({
+
+  // WR-05: include 'details' if the error carries validation constraint info
+  // (set by validateBody middleware) so all errors share one response shape.
+  const body: Record<string, unknown> = {
     error: isClientError ? err.message : 'Internal server error',
     statusCode,
-  });
+  };
+  if (err.details !== undefined) {
+    body.details = err.details;
+  }
+
+  res.status(statusCode).json(body);
 }

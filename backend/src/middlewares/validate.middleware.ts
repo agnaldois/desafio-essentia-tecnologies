@@ -12,12 +12,13 @@ export function validateBody<T extends object>(
       forbidNonWhitelisted: true,
     });
     if (errors.length > 0) {
-      res.status(400).json({
-        error: 'Validation failed',
-        statusCode: 400,
+      // WR-05: route through errorMiddleware for a unified error response shape.
+      // Attaching 'details' to the error object lets errorMiddleware include it.
+      const appErr = Object.assign(new Error('Validation failed'), {
+        status: 400,
         details: errors.map((e) => Object.values(e.constraints ?? {})),
       });
-      return;
+      return next(appErr);
     }
     req.body = dto;
     next();
