@@ -19,7 +19,7 @@ export const config = {
   },
   mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/techx_tasks',
   jwt: {
-    secret: process.env.JWT_SECRET || 'change_me_in_production',
+    secret: requireEnv('JWT_SECRET'),
     expiresIn: process.env.JWT_EXPIRES_IN || '24h',
   },
 } as const;
