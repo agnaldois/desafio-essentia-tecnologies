@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { taskService } from '../services/task.service';
+import { parseId } from './utils';
 
 /**
  * Thin HTTP controller — delegates all business logic to TaskService (D-15).
@@ -14,7 +15,7 @@ export class TaskController {
   }
 
   async getById(req: Request, res: Response, _next: NextFunction): Promise<void> {
-    const id = Number(req.params.id);
+    const id = parseId(req.params.id);
     const task = await taskService.findOne(id);
     res.status(200).json({ data: task, message: 'Task retrieved successfully' });
   }
@@ -25,19 +26,19 @@ export class TaskController {
   }
 
   async update(req: Request, res: Response, _next: NextFunction): Promise<void> {
-    const id = Number(req.params.id);
+    const id = parseId(req.params.id);
     const task = await taskService.update(id, req.body);
     res.status(200).json({ data: task, message: 'Task updated successfully' });
   }
 
   async toggle(req: Request, res: Response, _next: NextFunction): Promise<void> {
-    const id = Number(req.params.id);
+    const id = parseId(req.params.id);
     const task = await taskService.toggle(id);
     res.status(200).json({ data: task, message: 'Task toggled successfully' });
   }
 
   async remove(req: Request, res: Response, _next: NextFunction): Promise<void> {
-    const id = Number(req.params.id);
+    const id = parseId(req.params.id);
     await taskService.softDelete(id);
     res.status(204).send();
   }
