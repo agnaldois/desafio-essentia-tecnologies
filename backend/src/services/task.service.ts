@@ -37,9 +37,16 @@ export class TaskService {
       task.dueDate = dto.dueDate ? new Date(dto.dueDate) : null;
     }
     if (dto.completed !== undefined) {
+      const wasCompleted = task.completed;
       task.completed = dto.completed;
-      // Keep completedAt aligned with completed when PUT changes completion
-      task.completedAt = dto.completed ? (task.completedAt ?? new Date()) : null;
+      // Stamp completedAt only on the false→true transition (WR-02).
+      // If the task was already completed, leave the original timestamp unchanged.
+      // toggle() uses the same new Date() convention for its own transition.
+      if (dto.completed && !wasCompleted) {
+        task.completedAt = new Date();
+      } else if (!dto.completed) {
+        task.completedAt = null;
+      }
     }
     return TaskRepository.save(task);
   }
