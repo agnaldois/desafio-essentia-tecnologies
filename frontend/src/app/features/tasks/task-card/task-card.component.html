@@ -1,0 +1,55 @@
+<mat-card [class.completed]="task().completed" class="task-card">
+  <mat-card-header>
+    <div class="card-header-row">
+      <mat-checkbox
+        [checked]="task().completed"
+        [aria-label]="'Toggle task: ' + task().title"
+        (change)="toggle.emit(task().id)"
+      />
+      <span class="task-title" [class.completed-title]="task().completed">
+        {{ task().title }}
+      </span>
+      <div class="badges">
+        <!-- Priority badge -->
+        <span class="badge priority-badge" [ngClass]="'priority-' + task().priority">
+          {{ task().priority | titlecase }}
+        </span>
+        <!-- Due date badge (only rendered when dueDate is set) -->
+        @if (task().dueDate && dueDateState()) {
+          <span class="badge due-date-badge" [ngClass]="'due-' + dueDateState()">
+            <mat-icon class="badge-icon">
+              @if (dueDateState() === 'today') { today }
+              @else if (dueDateState() === 'overdue') { warning }
+              @else { schedule }
+            </mat-icon>
+            {{ task().dueDate | date:'MMM d' }}
+          </span>
+        }
+      </div>
+    </div>
+  </mat-card-header>
+
+  @if (task().description) {
+    <mat-card-content>
+      <p class="description">{{ task().description }}</p>
+    </mat-card-content>
+  }
+
+  <mat-card-actions align="end">
+    <button
+      mat-icon-button
+      aria-label="Edit task"
+      (click)="edit.emit(task())"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      color="warn"
+      aria-label="Delete task"
+      (click)="delete.emit(task().id)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

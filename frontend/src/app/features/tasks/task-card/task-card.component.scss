@@ -1,0 +1,110 @@
+:host {
+  display: block;
+  margin-bottom: 8px; // sm spacing between cards
+}
+
+.task-card {
+  width: 100%;
+  min-height: 80px;
+  padding: 16px;       // md padding (Material card default)
+  border-radius: 4px;
+
+  // Completion dimming — D-08 (locked)
+  &.completed {
+    opacity: 0.6;
+  }
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;        // sm gap
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.task-title {
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  // Completion strikethrough — D-08 (locked)
+  &.completed-title {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.38); // Material disabled text token
+  }
+}
+
+.badges {
+  display: flex;
+  gap: 4px;  // xs gap
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+
+  .badge-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+}
+
+// Priority badge colors — from UI-SPEC.md
+.priority-high {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.priority-medium {
+  background-color: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffe082;
+}
+
+.priority-low {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+// Due date badge colors — from UI-SPEC.md
+.due-upcoming {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.due-today {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.due-overdue {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.description {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  // Clamp description to 2 lines — from UI-SPEC.md typography section
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
