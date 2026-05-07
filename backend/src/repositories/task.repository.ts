@@ -8,4 +8,10 @@ export const TaskRepository = AppDataSource.getRepository(Task).extend({
   findById(id: number): Promise<Task | null> {
     return this.findOneBy({ id });
   },
+  findAllByUserId(userId: number): Promise<Task[]> {
+    return this.find({
+      where: { userId },
+      order: { createdAt: 'DESC' },
+    });
+  },
 });
