@@ -53,8 +53,15 @@
 
       <!-- Due date picker -->
       <mat-form-field appearance="outline" class="due-date-field">
-        <mat-label>Due date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="dueDate" />
+        <mat-label>Data de vencimento</mat-label>
+        <input
+          matInput
+          dateMask
+          [matDatepicker]="picker"
+          formControlName="dueDate"
+          placeholder="dd/mm/aaaa"
+          autocomplete="off"
+        />
         <mat-datepicker-toggle matIconSuffix [for]="picker" />
         <mat-datepicker #picker />
       </mat-form-field>

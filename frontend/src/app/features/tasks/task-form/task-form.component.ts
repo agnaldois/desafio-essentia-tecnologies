@@ -1,6 +1,6 @@
 import {
   Component, OnInit, inject, input, output,
-  ChangeDetectionStrategy, computed, ElementRef, viewChild,
+  ChangeDetectionStrategy, computed, ElementRef, viewChild, LOCALE_ID,
 } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,10 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TaskService } from '../../../core/services/task.service';
 import { Task } from '../../../core/models/task.model';
+import { BrazilianDateAdapter, BR_DATE_FORMATS } from '../../../core/utils/brazilian-date-adapter';
+import { DateMaskDirective } from '../../../shared/directives/date-mask.directive';
 
 @Component({
   selector: 'app-task-form',
@@ -23,8 +25,14 @@ import { Task } from '../../../core/models/task.model';
     MatButtonModule,
     MatButtonToggleModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     MatDialogModule,
+    DateMaskDirective,
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    { provide: DateAdapter, useClass: BrazilianDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: BR_DATE_FORMATS },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './task-form.component.html',
