@@ -1,15 +1,61 @@
-// Stub — Plan 02-04 will replace this with the full implementation
-import { Component } from '@angular/core';
+import {
+  Component, OnInit, inject, ChangeDetectionStrategy, viewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TaskService } from '../../../core/services/task.service';
+import { TaskFormComponent } from '../task-form/task-form.component';
+import { TaskCardComponent } from '../task-card/task-card.component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Task } from '../../../core/models/task.model';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [],
-  template: `
-    <div style="padding: 2rem; text-align: center">
-      <h2>Tasks</h2>
-      <p>Loading task list...</p>
-    </div>
-  `,
+  imports: [
+    TaskFormComponent,
+    TaskCardComponent,
+    MatButtonModule,
+    MatIconModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.scss',
 })
-export class TaskListComponent {}
+export class TaskListComponent implements OnInit {
+  protected readonly taskService = inject(TaskService);
+  private readonly dialog = inject(MatDialog);
+
+  // Reference to the inline form component for CTA focus (empty state D-03)
+  readonly createForm = viewChild(TaskFormComponent);
+
+  ngOnInit(): void {
+    this.taskService.loadTasks();
+  }
+
+  onToggle(id: number): void {
+    this.taskService.toggleTask(id).subscribe();
+  }
+
+  onEdit(task: Task): void {
+    this.dialog.open(TaskFormComponent, {
+      width: '480px',
+      data: task,
+    });
+  }
+
+  onDelete(id: number): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, { width: '320px' });
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.taskService.deleteTask(id).subscribe();
+      }
+    });
+  }
+
+  focusCreateForm(): void {
+    // Delegate focus to the inline form component (D-03 CTA action)
+    this.createForm()?.focusTitleInput();
+  }
+}

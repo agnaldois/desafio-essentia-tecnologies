@@ -1,0 +1,76 @@
+.page-container {
+  max-width: 800px; // desktop max-width — from UI-SPEC Responsive Breakpoints
+  margin: 0 auto;
+  padding: 48px 24px 24px; // 2xl top, lg sides
+}
+
+.page-title {
+  font-size: 20px; // Display size from UI-SPEC typography
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.87);
+  margin: 0 0 24px; // lg bottom margin
+}
+
+.create-form-panel {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 16px; // md padding
+  margin-bottom: 24px; // lg gap between form and cards
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; // sm gap between cards
+}
+
+// Empty state — D-03
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0; // xl vertical
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: rgba(0, 0, 0, 0.26);
+  margin-bottom: 16px; // md
+}
+
+.empty-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.54);
+  margin: 0 0 8px; // sm
+}
+
+.empty-body {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.38);
+  margin: 0 0 16px; // md
+}
+
+.empty-cta {
+  margin-top: 0;
+}
+
+// Responsive — from UI-SPEC Breakpoints
+@media (max-width: 599px) {
+  .page-container {
+    padding: 16px; // reduced on mobile
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 959px) {
+  .page-container {
+    max-width: 720px;
+    padding: 32px 24px;
+  }
+}

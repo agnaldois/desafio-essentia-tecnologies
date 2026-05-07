@@ -1,0 +1,36 @@
+<div class="page-container">
+  <!-- Page title -->
+  <h1 class="page-title">My Tasks</h1>
+
+  <!-- Inline create form — always visible at top of page (D-04) -->
+  <div class="create-form-panel">
+    <app-task-form />
+  </div>
+
+  <!-- Task list -->
+  <div class="task-list">
+    @for (task of taskService.tasks(); track task.id) {
+      <app-task-card
+        [task]="task"
+        (toggle)="onToggle($event)"
+        (edit)="onEdit($event)"
+        (delete)="onDelete($event)"
+      />
+    } @empty {
+      <!-- Empty state — D-03 -->
+      <div class="empty-state">
+        <mat-icon class="empty-icon">check_circle_outline</mat-icon>
+        <h2 class="empty-heading">No tasks yet</h2>
+        <p class="empty-body">Get started by creating your first task.</p>
+        <button
+          mat-flat-button
+          color="primary"
+          class="empty-cta"
+          (click)="focusCreateForm()"
+        >
+          Create your first task
+        </button>
+      </div>
+    }
+  </div>
+</div>
