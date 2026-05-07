@@ -1,0 +1,80 @@
+<!-- Dialog title — shown in modal context via MatDialog; ignored in inline context -->
+@if (isEditMode()) {
+  <h2 mat-dialog-title>Edit Task</h2>
+}
+
+<!-- Form body — shown in both inline and modal contexts -->
+<mat-dialog-content [class.inline-form]="!isEditMode()">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <!-- Title field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input
+        matInput
+        formControlName="title"
+        placeholder="What needs to be done?"
+        #titleInput
+      />
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <mat-error>
+          @if (form.get('title')?.hasError('required')) {
+            Title is required
+          }
+          @if (form.get('title')?.hasError('maxlength')) {
+            Title must be 255 characters or less
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Description field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Add details (optional)"
+        rows="2"
+      ></textarea>
+    </mat-form-field>
+
+    <!-- Priority + Due date row -->
+    <div class="form-row">
+      <!-- Priority toggle group -->
+      <div class="priority-group">
+        <label class="field-label">Priority</label>
+        <mat-button-toggle-group formControlName="priority" aria-label="Priority">
+          <mat-button-toggle value="low">Low</mat-button-toggle>
+          <mat-button-toggle value="medium">Med</mat-button-toggle>
+          <mat-button-toggle value="high">High</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Due date picker -->
+      <mat-form-field appearance="outline" class="due-date-field">
+        <mat-label>Due date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dueDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<!-- Actions — shown in both contexts -->
+<mat-dialog-actions align="end">
+  @if (isEditMode()) {
+    <button mat-button mat-dialog-close type="button">Cancel</button>
+  }
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    [disabled]="form.invalid"
+    (click)="submit()"
+  >
+    {{ isEditMode() ? 'Save' : 'Add Task' }}
+  </button>
+</mat-dialog-actions>
