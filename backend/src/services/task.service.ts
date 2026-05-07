@@ -62,15 +62,29 @@ export class TaskService {
       userId,
     });
     const saved = await TaskRepository.save(task);
+
+    // Compensating transaction: only roll back if the log WRITE fails.
     try {
       await pushLog(saved.id, 'created', saved.title);
-      const activityLog = await fetchLog(saved.id);
-      return { ...saved, activityLog };
-    } catch (mongoErr) {
-      // Compensating transaction: roll back the MySQL row if MongoDB write fails
-      try { await TaskRepository.softDelete(saved.id); } catch { /* log orphan */ }
-      throw Object.assign(new Error('Failed to write activity log; task creation rolled back'), { status: 503 });
+    } catch {
+      try {
+        await TaskRepository.softDelete(saved.id);
+      } catch (rollbackErr) {
+        console.error('[TaskService] Compensating rollback failed; orphaned taskId:', saved.id, rollbackErr);
+      }
+      throw Object.assign(
+        new Error('Failed to write activity log; task creation rolled back'),
+        { status: 503 },
+      );
     }
+
+    // Fetching the log for the response is best-effort — failure is non-fatal.
+    let activityLog: ActivityLogEntry[] = [];
+    try {
+      activityLog = await fetchLog(saved.id);
+    } catch { /* MongoDB read unavailable — degrade gracefully */ }
+
+    return { ...saved, activityLog };
   }
 
   async update(id: number, dto: UpdateTaskDto, userId: number): Promise<TaskWithLog> {
