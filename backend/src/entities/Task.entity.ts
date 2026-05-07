@@ -5,7 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Relation,
 } from 'typeorm';
+import { User } from './User.entity';
 
 export enum TaskPriority {
   LOW = 'low',
@@ -36,6 +40,13 @@ export class Task {
   @Column({ type: 'timestamp', nullable: true })
   completedAt!: Date | null;
 
+  @Column({ type: 'int', nullable: true })
+  userId!: number | null;
+
+  @ManyToOne(() => User, (user) => user.tasks, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'userId' })
+  user!: Relation<User> | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 
@@ -44,7 +55,4 @@ export class Task {
 
   @DeleteDateColumn()
   deletedAt!: Date | null;
-
-  // Phase 3 will add: @ManyToOne(() => User) and @Column({ type: 'int', nullable: true }) userId
-  // via a separate migration (D-04). Do NOT add userId in Phase 1.
 }
