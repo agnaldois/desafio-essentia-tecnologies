@@ -12,8 +12,12 @@ async function bootstrap(): Promise<void> {
   await AppDataSource.initialize();
   console.log('[DB] MySQL connected via TypeORM');
 
-  // Phase 3: MongoDB connection
-  await connectMongoDB();
+  // Phase 3: MongoDB connection — soft dependency; server starts even when MongoDB is unreachable.
+  try {
+    await connectMongoDB();
+  } catch (err) {
+    console.warn('[DB] MongoDB unavailable — activity log features disabled:', err);
+  }
 
   const port = config.port;
   app.listen(port, () => {
