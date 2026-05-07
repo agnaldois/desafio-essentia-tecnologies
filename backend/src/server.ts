@@ -5,14 +5,15 @@ import 'reflect-metadata';
 import { AppDataSource } from './config/data-source';
 import { app } from './app';
 import { config } from './config/env';
+import { connectMongoDB } from './config/mongodb';
 
 async function bootstrap(): Promise<void> {
   // Initialize MySQL via TypeORM before accepting HTTP traffic (D-16)
   await AppDataSource.initialize();
   console.log('[DB] MySQL connected via TypeORM');
 
-  // MongoDB connection is wired in Phase 3 — placeholder comment kept here
-  // to signal where: await connectMongoDB();
+  // Phase 3: MongoDB connection
+  await connectMongoDB();
 
   const port = config.port;
   app.listen(port, () => {

@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import { config } from './config/env';
 import { taskRouter } from './routes/task.routes';
 import { errorMiddleware } from './middlewares/error.middleware';
+import { authRouter } from './routes/auth.routes';
+import { authMiddleware } from './middlewares/auth.middleware';
 
 export const app = express();
 
@@ -28,11 +30,12 @@ app.use(
 // 4. Body parsing
 app.use(express.json());
 
-// 5. Public auth routes — placeholder for Phase 3
-// app.use('/api/v1/auth', authRouter);
+// 5. Public auth routes — registered BEFORE authMiddleware (CLAUDE.md load-bearing order)
+app.use('/api/v1/auth', authRouter);
 
-// 6. Auth middleware — placeholder for Phase 3
-// app.use(authMiddleware);
+// 6. Auth middleware — protects ALL routes registered after this line
+// NOTE: any future public routes must be registered ABOVE this line
+app.use(authMiddleware);
 
 // 7. Protected task routes
 app.use('/api/v1/tasks', taskRouter);
