@@ -1,10 +1,10 @@
-<!-- Dialog title — shown in modal context via MatDialog; ignored in inline context -->
-@if (isEditMode()) {
-  <h2 mat-dialog-title>Edit Task</h2>
+<!-- Dialog title — shown whenever opened as a modal (create or edit) -->
+@if (isModal()) {
+  <h2 mat-dialog-title>{{ isEditMode() ? 'Editar Tarefa' : 'Criar Tarefa' }}</h2>
 }
 
-<!-- Form body — shown in both inline and modal contexts -->
-<mat-dialog-content [class.inline-form]="!isEditMode()">
+<!-- Form body -->
+<mat-dialog-content [class.inline-form]="!isModal()">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <!-- Title field -->
@@ -63,10 +63,10 @@
   </form>
 </mat-dialog-content>
 
-<!-- Actions — shown in both contexts -->
+<!-- Actions -->
 <mat-dialog-actions align="end">
-  @if (isEditMode()) {
-    <button mat-button mat-dialog-close type="button">Cancel</button>
+  @if (isModal()) {
+    <button mat-button mat-dialog-close type="button">Cancelar</button>
   }
   <button
     mat-flat-button
@@ -75,6 +75,6 @@
     [disabled]="form.invalid"
     (click)="submit()"
   >
-    {{ isEditMode() ? 'Save' : 'Add Task' }}
+    {{ isEditMode() ? 'Salvar' : 'Criar Tarefa' }}
   </button>
 </mat-dialog-actions>

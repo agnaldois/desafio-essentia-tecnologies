@@ -45,8 +45,8 @@ export class TaskFormComponent implements OnInit {
   // ViewChild reference to the title input for CTA focus (D-03)
   readonly titleInputRef = viewChild<ElementRef<HTMLInputElement>>('titleInput');
 
-  // True in both modal edit (dialogData present) and inline edit (task input set)
   readonly isEditMode = computed(() => !!this.task() || !!this.dialogData);
+  readonly isModal = computed(() => !!this.dialogRef);
 
   readonly form = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.maxLength(255)]),

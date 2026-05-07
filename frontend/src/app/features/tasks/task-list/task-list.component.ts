@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, inject, ChangeDetectionStrategy, viewChild,
+  Component, OnInit, inject, ChangeDetectionStrategy,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +16,6 @@ import { Task } from '../../../core/models/task.model';
   selector: 'app-task-list',
   standalone: true,
   imports: [
-    TaskFormComponent,
     TaskCardComponent,
     MatButtonModule,
     MatIconModule,
@@ -30,15 +29,15 @@ export class TaskListComponent implements OnInit {
   protected readonly taskService = inject(TaskService);
   private readonly dialog = inject(MatDialog);
 
-  // Reference to the inline form component for CTA focus (empty state D-03)
-  readonly createForm = viewChild(TaskFormComponent);
-
   // Bridge TaskService's loading$ Observable to the signal boundary (D-16)
-  // toSignal() MUST be called as a field initializer, never inside ngOnInit()
   readonly isLoading = toSignal(this.taskService.loading$, { initialValue: false });
 
   ngOnInit(): void {
     this.taskService.loadTasks();
+  }
+
+  openCreateModal(): void {
+    this.dialog.open(TaskFormComponent, { width: '480px' });
   }
 
   onToggle(id: number): void {
@@ -59,10 +58,5 @@ export class TaskListComponent implements OnInit {
         this.taskService.deleteTask(id).subscribe();
       }
     });
-  }
-
-  focusCreateForm(): void {
-    // Delegate focus to the inline form component (D-03 CTA action)
-    this.createForm()?.focusTitleInput();
   }
 }

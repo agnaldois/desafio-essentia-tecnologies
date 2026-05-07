@@ -1,20 +1,21 @@
 <div class="page-container">
-  <!-- Page title -->
-  <h1 class="page-title">My Tasks</h1>
-
-  <!-- Inline create form — always visible at top of page (D-04) -->
-  <div class="create-form-panel">
-    <app-task-form />
+  <!-- Header: title (left) + create button (right) -->
+  <div class="page-header">
+    <h1 class="page-title">Lista de Tarefas</h1>
+    <button mat-flat-button color="primary" (click)="openCreateModal()">
+      <mat-icon>add</mat-icon>
+      Criar Tarefa
+    </button>
   </div>
 
-  <!-- Loading indicator — shown while loadTasks() HTTP call is in-flight -->
+  <!-- Loading indicator -->
   @if (isLoading()) {
     <div class="loading-container">
       <mat-spinner diameter="40" />
     </div>
   } @else {
-    <!-- Task list -->
-    <div class="task-list">
+    <!-- Task grid — 4 columns -->
+    <div class="task-grid">
       @for (task of taskService.tasks(); track task.id) {
         <app-task-card
           [task]="task"
@@ -23,18 +24,17 @@
           (delete)="onDelete($event)"
         />
       } @empty {
-        <!-- Empty state — D-03 -->
         <div class="empty-state">
           <mat-icon class="empty-icon">check_circle_outline</mat-icon>
-          <h2 class="empty-heading">No tasks yet</h2>
-          <p class="empty-body">Get started by creating your first task.</p>
+          <h2 class="empty-heading">Nenhuma tarefa ainda</h2>
+          <p class="empty-body">Comece criando sua primeira tarefa.</p>
           <button
             mat-flat-button
             color="primary"
             class="empty-cta"
-            (click)="focusCreateForm()"
+            (click)="openCreateModal()"
           >
-            Create your first task
+            Criar primeira tarefa
           </button>
         </div>
       }
