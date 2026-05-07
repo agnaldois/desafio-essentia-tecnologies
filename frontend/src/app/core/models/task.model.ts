@@ -1,5 +1,12 @@
 export type TaskPriority = 'low' | 'medium' | 'high';
 
+// Phase 3: MongoDB activityLog entry shape — matches backend ActivityLogEntry type
+export interface ActivityLogEntry {
+  action: 'created' | 'updated' | 'deleted' | 'toggled';
+  timestamp: string;    // ISO datetime string (Date serialized to JSON)
+  detail: string;
+}
+
 export interface Task {
   id: number;
   title: string;
@@ -10,7 +17,7 @@ export interface Task {
   completedAt?: string | null;  // ISO datetime string or null
   createdAt: string;            // ISO datetime string
   updatedAt: string;            // ISO datetime string
-  // Phase 3 will add: activityLog?: ActivityLogEntry[]
+  activityLog?: ActivityLogEntry[];   // Phase 3: from MongoDB via API response (D-05)
 }
 
 export interface CreateTaskDto {
