@@ -19,6 +19,12 @@
   margin-bottom: 24px; // lg gap between form and cards
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
 .task-list {
   display: flex;
   flex-direction: column;

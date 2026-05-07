@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Task, CreateTaskDto, UpdateTaskDto, ApiResponse } from '../models/task.model';
 
@@ -16,15 +16,23 @@ export class TaskService {
   // Derived computed signal
   readonly pendingCount = computed(() => this._tasks().filter(t => !t.completed).length);
 
+  // Loading state — exposed as Observable for toSignal() consumption in components (D-16)
+  private readonly _loading$ = new BehaviorSubject<boolean>(false);
+  readonly loading$ = this._loading$.asObservable();
+
   loadTasks(): void {
+    this._loading$.next(true);
     this.http.get<ApiResponse<Task[]>>(this.apiUrl).subscribe({
-      next: ({ data }) =>
+      next: ({ data }) => {
         this._tasks.set(
           [...data].sort(
             (a, b) =>
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           ),
-        ),
+        );
+        this._loading$.next(false);
+      },
+      error: () => this._loading$.next(false),
     });
   }
 
