@@ -11,6 +11,12 @@
   margin-bottom: 24px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .page-title {
   font-size: 20px;
   font-weight: 600;

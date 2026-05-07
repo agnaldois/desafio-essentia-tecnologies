@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TaskService } from '../../../core/services/task.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -27,6 +28,7 @@ import { Task } from '../../../core/models/task.model';
 })
 export class TaskListComponent implements OnInit {
   protected readonly taskService = inject(TaskService);
+  private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
 
   // Bridge TaskService's loading$ Observable to the signal boundary (D-16)
@@ -58,5 +60,9 @@ export class TaskListComponent implements OnInit {
         this.taskService.deleteTask(id).subscribe();
       }
     });
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }
